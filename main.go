@@ -74,7 +74,6 @@ func main() {
 			break
 		}
 	}
-	log.Print(len(tea.StringValue(tea.String(currentHostIP))))
 	if tea.StringValue(oldRecord.Value) == currentHostIP {
 		return
 	}
@@ -84,6 +83,7 @@ func main() {
 		Type:     oldRecord.Type,
 		Value:    &currentHostIP,
 	}
+	log.Printf("%s.%s change ip from %+v to %+v.\n", SubDomain, Domain, tea.StringValue(oldRecord.Value), currentHostIP)
 	_, err = client.UpdateDomainRecord(req)
 	if err != nil {
 		panic(err)
