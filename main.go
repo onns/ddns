@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os/exec"
 	"strings"
 
 	dns "github.com/alibabacloud-go/alidns-20150109/v2/client"
@@ -47,6 +48,19 @@ func getCurrentIp() (ip string) {
 	return
 }
 
+func getCurrentInternalIp() (ip string) {
+	cmd := exec.Command("ipconfig", "getifaddr", "en0")
+	stdout, err := cmd.Output()
+
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+
+	ip = string(stdout)
+	return
+}
+
 func main() {
 	var (
 		client        *dns.Client
@@ -55,7 +69,8 @@ func main() {
 		rr            = tea.String(SubDomain)
 		t             = tea.String("A")
 	)
-	currentHostIP = getCurrentIp()
+	// currentHostIP = getCurrentIp()
+	currentHostIP = getCurrentInternalIp()
 	client, err = CreateClient()
 	if err != nil {
 		panic(err)
