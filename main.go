@@ -16,9 +16,9 @@ import (
 
 // edit it before run your own code
 
-var AccessKeyId = ""
-var AccessKeySecret = ""
-var SubDomain = "xm"
+var AccessKeyId = "LTAIMwxO3zIjXWiQ"
+var AccessKeySecret = "sPvzjjMMA66RaOT0OGiDSkUcAmys5W"
+var SubDomain = "sh"
 var Domain = "onns.xyz"
 
 // edit over
@@ -58,6 +58,8 @@ func getCurrentInternalIp() (ip string) {
 	}
 
 	ip = string(stdout)
+	// html has '\n' in the end of the file, remove it.
+	ip = strings.Trim(ip, "\n")
 	return
 }
 
