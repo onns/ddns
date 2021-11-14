@@ -15,9 +15,10 @@ import (
 )
 
 // edit it before run your own code
+// and do not push them to github
 
-var AccessKeyId = "LTAIMwxO3zIjXWiQ"
-var AccessKeySecret = "sPvzjjMMA66RaOT0OGiDSkUcAmys5W"
+var AccessKeyId = ""
+var AccessKeySecret = ""
 var SubDomain = "sh"
 var Domain = "onns.xyz"
 
