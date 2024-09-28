@@ -3,8 +3,10 @@ package main
 import (
 	"flag"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net"
+	"net/http"
 	"os/exec"
 	"strings"
 
@@ -69,6 +71,20 @@ func getLocalIp() (res string) {
 	return
 }
 
+func getWANIp() (ip string) {
+	responseClient, err := http.Get("http://members.3322.org/dyndns/getip")
+	if err != nil {
+		fmt.Printf("get ip err: %+v \n", err)
+		panic(err)
+	}
+	defer responseClient.Body.Close()
+	body, _ := ioutil.ReadAll(responseClient.Body)
+	ip = fmt.Sprintf("%s", string(body))
+	// html has '\n' in the end of the file, remove it.
+	ip = strings.Trim(ip, "\n")
+	return
+}
+
 func getCurrentIp() (ip string) {
 	cmd := exec.Command("/usr/sbin/ipconfig", "getifaddr", "en0")
 	stdout, err := cmd.Output()
@@ -84,6 +100,7 @@ func getCurrentIp() (ip string) {
 
 func main() {
 	sb := flag.String("sd", "", "sub domain")
+	wan := flag.Bool("w", false, "wan or lan ip")
 	flag.Parse()
 	var (
 		client        *dns.Client
@@ -92,10 +109,16 @@ func main() {
 		rr            = tea.String(SubDomain)
 		t             = tea.String("A")
 	)
+	if len(*sb) < 4 {
+		panic("最少四个字符")
+	}
 	if *sb != "" {
 		rr = sb
 	}
 	currentHostIP = getLocalIp()
+	if *wan {
+		currentHostIP = getWANIp()
+	}
 	client, err = CreateClient()
 	if err != nil {
 		panic(err)
