@@ -101,6 +101,7 @@ func getCurrentIp() (ip string) {
 func main() {
 	sb := flag.String("sd", "", "sub domain")
 	wan := flag.Bool("w", false, "wan or lan ip")
+	ip := flag.String("ip", "", "specific ip, empty for LAN ip default")
 	flag.Parse()
 	var (
 		client        *dns.Client
@@ -118,6 +119,9 @@ func main() {
 	currentHostIP = getLocalIp()
 	if *wan {
 		currentHostIP = getWANIp()
+	}
+	if *ip != "" {
+		currentHostIP = *ip
 	}
 	client, err = CreateClient()
 	if err != nil {
